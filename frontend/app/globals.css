@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #09090b;
+  --foreground: #fafafa;
 }
 
 @theme inline {
@@ -12,15 +12,61 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #18181b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass morphism */
+.glass {
+  background: rgba(24, 24, 27, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(63, 63, 70, 0.5);
+}
+
+/* Glow effects */
+.glow-violet {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+/* PC Part card hover effect */
+.part-card {
+  transition: all 0.3s ease;
+}
+
+.part-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
