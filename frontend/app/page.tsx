@@ -8,12 +8,23 @@ import { ValueEngineAnimation } from "@/components/home/value-engine-animation";
 import { useState } from "react";
 
 // Mock Data for Curated Builds
+// Mock Data for Curated Builds
 const curatedBuilds = [
   {
     id: 1,
     name: "The 1080p Value King",
     price: 685,
     specs: "Ryzen 5 5600 • RX 6600 • 16GB DDR4",
+    details: {
+      cpu: "AMD Ryzen 5 5600",
+      gpu: "ASRock Radeon RX 6600 Challenger D",
+      mobo: "MSI B550M PRO-VDH WIFI",
+      ram: "Silicon Power 16GB (2x8GB) DDR4-3200",
+      storage: "TeamGroup MP33 1TB NVMe",
+      psu: "MSI MAG A550BN 550W",
+      case: "Montech AIR 100 ARGB",
+      cpu_price: 135, gpu_price: 190, mobo_price: 100, ram_price: 35, storage_price: 55, psu_price: 50, case_price: 60
+    },
     bottleneck: "0%",
     valueScore: "9.8/10",
     imageColor: "bg-[#ffa828]",
@@ -23,6 +34,16 @@ const curatedBuilds = [
     name: "1440p High Refresh",
     price: 1250,
     specs: "Ryzen 5 7600X • RTX 4070 • 32GB DDR5",
+    details: {
+      cpu: "AMD Ryzen 5 7600X",
+      gpu: "Gigabyte RTX 4070 WINDFORCE OC",
+      mobo: "Gigabyte B650 AORUS ELITE AX",
+      ram: "G.Skill Flare X5 32GB (2x16GB) DDR5-6000",
+      storage: "WD Black SN770 1TB NVMe",
+      psu: "Corsair RM750e 750W",
+      case: "Lian Li CH210",
+      cpu_price: 200, gpu_price: 550, mobo_price: 190, ram_price: 100, storage_price: 70, psu_price: 90, case_price: 50
+    },
     bottleneck: "2%",
     valueScore: "9.5/10",
     imageColor: "bg-[#ff4b4b]",
@@ -32,6 +53,16 @@ const curatedBuilds = [
     name: "4K Ray Tracing Beast",
     price: 2400,
     specs: "Ryzen 7 7800X3D • RTX 4080 Super • 32GB DDR5",
+    details: {
+      cpu: "AMD Ryzen 7 7800X3D",
+      gpu: "ASUS TUF RTX 4080 Super",
+      mobo: "ASUS ROG STRIX B650-A GAMING WIFI",
+      ram: "Corsair Vengeance RGB 32GB DDR5-6000",
+      storage: "Samsung 990 Pro 2TB",
+      psu: "Corsair RM1000e 1000W",
+      case: "Hyte Y60",
+      cpu_price: 380, gpu_price: 1000, mobo_price: 220, ram_price: 125, storage_price: 160, psu_price: 140, case_price: 180
+    },
     bottleneck: "0%",
     valueScore: "9.2/10",
     imageColor: "bg-[#c678dd]",
@@ -133,7 +164,7 @@ export default function Home() {
                 </div>
 
                 <Link
-                  href={`/builder?cpu=${encodeURIComponent(build.specs.split(" • ")[0])}&gpu=${encodeURIComponent(build.specs.split(" • ")[1])}`}
+                  href={`/builder?cpu=${encodeURIComponent(build.details.cpu)}&cpu_price=${build.details.cpu_price}&gpu=${encodeURIComponent(build.details.gpu)}&gpu_price=${build.details.gpu_price}&mobo=${encodeURIComponent(build.details.mobo)}&mobo_price=${build.details.mobo_price}&ram=${encodeURIComponent(build.details.ram)}&ram_price=${build.details.ram_price}&storage=${encodeURIComponent(build.details.storage)}&storage_price=${build.details.storage_price}&psu=${encodeURIComponent(build.details.psu)}&psu_price=${build.details.psu_price}&case=${encodeURIComponent(build.details.case)}&case_price=${build.details.case_price}`}
                   className="block w-full text-center py-2.5 bg-[#292524] hover:bg-[#ff4b4b] hover:text-white text-stone-300 rounded-lg text-sm font-medium transition-colors"
                 >
                   View Build Details
