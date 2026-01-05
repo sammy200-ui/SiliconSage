@@ -1,315 +1,265 @@
+"use client";
+
 import Link from "next/link";
-import { Cpu, Zap, TrendingUp, MessageSquare, ArrowRight, Monitor, Gamepad2, Database, Sparkles } from "lucide-react";
-import { getDatabaseStats, getFeaturedParts } from "./actions/parts";
+import { ArrowRight, CheckCircle, XCircle, Cpu, Zap, TrendingUp, Monitor, Gamepad2, Laptop, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { HomeAdvisorWidget } from "@/components/home/home-advisor-widget";
+import { ValueEngineAnimation } from "@/components/home/value-engine-animation";
+import { useState } from "react";
 
-const features = [
+// Mock Data for Curated Builds
+const curatedBuilds = [
   {
-    icon: Cpu,
-    title: "Smart Parts Matcher",
-    description: "AI-powered compatibility checking with 2D visualization of your build.",
-    color: "from-violet-500 to-purple-600",
+    id: 1,
+    name: "The 1080p Value King",
+    price: 685,
+    specs: "Ryzen 5 5600 • RX 6600 • 16GB DDR4",
+    bottleneck: "0%",
+    valueScore: "9.8/10",
+    imageColor: "bg-[#ffa828]",
   },
   {
-    icon: Zap,
-    title: "Bottleneck Calculator",
-    description: "ML model predicts FPS and warns if your CPU is choking your GPU.",
-    color: "from-amber-500 to-orange-600",
+    id: 2,
+    name: "1440p High Refresh",
+    price: 1250,
+    specs: "Ryzen 5 7600X • RTX 4070 • 32GB DDR5",
+    bottleneck: "2%",
+    valueScore: "9.5/10",
+    imageColor: "bg-[#ff4b4b]",
   },
   {
-    icon: TrendingUp,
-    title: "Value Optimization",
-    description: "Get the best performance per dollar with tier-based recommendations.",
-    color: "from-emerald-500 to-teal-600",
-  },
-  {
-    icon: MessageSquare,
-    title: "AI Advisor",
-    description: "Chat with Llama 3 to understand why a build is good or bad.",
-    color: "from-cyan-500 to-blue-600",
+    id: 3,
+    name: "4K Ray Tracing Beast",
+    price: 2400,
+    specs: "Ryzen 7 7800X3D • RTX 4080 Super • 32GB DDR5",
+    bottleneck: "0%",
+    valueScore: "9.2/10",
+    imageColor: "bg-[#c678dd]",
   },
 ];
 
-const ecosystemCards = [
-  {
-    icon: Monitor,
-    title: "Custom PC",
-    description: "Full control, upgradability, best value for power users",
-    specs: "Up to 240 FPS • Unlimited storage • VR Ready",
-  },
-  {
-    icon: Gamepad2,
-    title: "Console (PS5/Xbox)",
-    description: "Plug and play, exclusive games, consistent experience",
-    specs: "60-120 FPS • 1TB storage • Couch gaming",
-  },
-  {
-    icon: Monitor,
-    title: "Gaming Laptop",
-    description: "Portable power, all-in-one solution",
-    specs: "60-144 FPS • Portable • Work + Play",
-  },
-];
-
-export default async function Home() {
-  // Fetch real data from Supabase
-  const [stats, featured] = await Promise.all([
-    getDatabaseStats(),
-    getFeaturedParts(),
-  ]);
+export default function Home() {
+  const [activeEcosystem, setActiveEcosystem] = useState<"pc" | "console">("pc");
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#171514]">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-violet-950/20 via-zinc-950 to-zinc-950" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-r from-violet-600/20 to-cyan-600/20 blur-3xl rounded-full" />
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-32">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800/50 border border-zinc-700 rounded-full text-sm text-zinc-300 mb-8">
-              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-              AI-Powered PC Building
+      <section className="relative pt-32 pb-24 lg:pt-48 lg:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-[90vh] flex flex-col justify-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#292524] border border-[#44403c] rounded-full text-sm text-[#ffa828]">
+              <span className="w-2 h-2 bg-[#ffa828] rounded-full animate-pulse" />
+              AI-Powered Value Optimization
             </div>
-            
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-              Build Smarter,{" "}
-              <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                Not Harder
-              </span>
+
+            <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-white leading-[1.1]">
+              Build Smarter, <br />
+              <span className="text-[#ff4b4b]">Not Harder.</span>
             </h1>
-            
-            <p className="text-xl text-zinc-400 max-w-2xl mx-auto mb-10">
-              SiliconSage uses Machine Learning to predict bottlenecks, optimize value, 
-              and tell you if a PS5 is actually a better deal than your $700 build.
+
+            <p className="text-xl text-stone-400 max-w-lg">
+              SiliconSage analyzes thousands of parts to predict bottlenecks, optimize value, and save you money before you buy.
             </p>
 
-            {/* Database Stats Badge */}
-            {stats && (
-              <div className="flex items-center justify-center gap-2 mb-10">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-950/50 border border-emerald-700/50 rounded-full text-sm text-emerald-300">
-                  <Database className="w-4 h-4" />
-                  <span className="font-semibold">{stats.totalParts.toLocaleString()}</span> real parts from our database
-                </div>
-              </div>
-            )}
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/builder"
-                className="group flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 text-white font-semibold rounded-xl transition-all hover:shadow-xl hover:shadow-violet-500/25"
+                className="inline-flex items-center justify-center px-8 py-4 bg-[#ff4b4b] hover:bg-[#ffa828] text-white font-semibold rounded-xl transition-all shadow-lg shadow-[#ff4b4b]/20"
               >
-                Start Building
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                Start Building Now
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
               <Link
                 href="/compare"
-                className="px-8 py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold rounded-xl transition-colors border border-zinc-700"
+                className="inline-flex items-center justify-center px-8 py-4 bg-[#292524] hover:bg-[#1c1917] text-stone-200 font-semibold rounded-xl transition-colors border border-[#44403c]"
               >
                 Compare Ecosystems
               </Link>
             </div>
           </div>
+
+          <div className="flex justify-center lg:justify-end">
+            <HomeAdvisorWidget />
+          </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-24 bg-zinc-900/50">
+      {/* Value Engine Section */}
+      <section className="py-24 bg-[#1c1917] border-y border-[#292524]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              More Than a Compatibility Checker
-            </h2>
-            <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
-              SiliconSage is a Value Optimization Engine powered by real ML models.
-            </p>
+            <h2 className="text-3xl font-bold mb-4">The Value Engine Difference</h2>
+            <p className="text-stone-400 text-lg">Stop overspending on parts that don't matter.</p>
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="group p-6 bg-zinc-900 border border-zinc-800 rounded-2xl hover:border-zinc-700 transition-all part-card"
-              >
-                <div className={`w-12 h-12 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center mb-4`}>
-                  <feature.icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                <p className="text-zinc-400 text-sm">{feature.description}</p>
-              </div>
-            ))}
-          </div>
+
+          <ValueEngineAnimation />
         </div>
       </section>
 
-      {/* Featured Parts Section - Real Data from Supabase */}
-      {(featured.cpus.length > 0 || featured.gpus.length > 0) && (
-        <section className="py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-violet-950/50 border border-violet-700/50 rounded-full text-xs text-violet-300 mb-4">
-                <Sparkles className="w-3 h-3" />
-                Live from Database
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                Top Performance Picks
-              </h2>
-              <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
-                Best performing parts under $500 (CPUs) and $800 (GPUs) from our database.
-              </p>
-            </div>
-
-            <div className="grid lg:grid-cols-2 gap-8">
-              {/* Top CPUs */}
-              {featured.cpus.length > 0 && (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-violet-400 flex items-center gap-2">
-                    <Cpu className="w-5 h-5" />
-                    Top CPUs
-                  </h3>
-                  <div className="space-y-3">
-                    {featured.cpus.map((cpu, idx) => (
-                      <div
-                        key={cpu.id}
-                        className="flex items-center justify-between p-4 bg-zinc-900 border border-zinc-800 rounded-xl hover:border-violet-700/50 transition-colors"
-                      >
-                        <div className="flex items-center gap-4">
-                          <span className="text-2xl font-bold text-zinc-600">#{idx + 1}</span>
-                          <div>
-                            <p className="font-medium">{cpu.name}</p>
-                            <p className="text-sm text-zinc-500">
-                              {cpu.core_count} cores • {cpu.boost_clock}GHz boost • {cpu.tdp}W TDP
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-lg font-semibold text-emerald-400">${cpu.price?.toFixed(2)}</p>
-                          <p className="text-xs text-zinc-500">Score: {cpu.benchmark_score?.toLocaleString()}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Top GPUs */}
-              {featured.gpus.length > 0 && (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-cyan-400 flex items-center gap-2">
-                    <Zap className="w-5 h-5" />
-                    Top GPUs
-                  </h3>
-                  <div className="space-y-3">
-                    {featured.gpus.map((gpu, idx) => (
-                      <div
-                        key={gpu.id}
-                        className="flex items-center justify-between p-4 bg-zinc-900 border border-zinc-800 rounded-xl hover:border-cyan-700/50 transition-colors"
-                      >
-                        <div className="flex items-center gap-4">
-                          <span className="text-2xl font-bold text-zinc-600">#{idx + 1}</span>
-                          <div>
-                            <p className="font-medium">{gpu.name}</p>
-                            <p className="text-sm text-zinc-500">
-                              {gpu.chipset} • {gpu.memory}GB • {gpu.boost_clock}MHz
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-lg font-semibold text-emerald-400">${gpu.price?.toFixed(2)}</p>
-                          <p className="text-xs text-zinc-500">Score: {gpu.benchmark_score?.toLocaleString()}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="text-center mt-10">
-              <Link
-                href="/builder"
-                className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 font-medium"
-              >
-                Browse all {stats?.totalParts.toLocaleString()} parts in the builder
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
+      {/* Curated Builds Carousel */}
+      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-end justify-between mb-12">
+          <div>
+            <h2 className="text-3xl font-bold mb-2">Curated Builds</h2>
+            <p className="text-stone-400">Hand-picked by our algorithms for every budget.</p>
           </div>
-        </section>
-      )}
-
-      {/* Ecosystem Comparison Preview */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              PC vs Console vs Laptop
-            </h2>
-            <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
-              We don&apos;t just help you build a PC—we tell you if you even should.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6">
-            {ecosystemCards.map((card, index) => (
-              <div
-                key={card.title}
-                className={`p-6 rounded-2xl border transition-all part-card ${
-                  index === 0
-                    ? "bg-gradient-to-br from-violet-950/50 to-zinc-900 border-violet-500/30"
-                    : "bg-zinc-900 border-zinc-800 hover:border-zinc-700"
-                }`}
-              >
-                <card.icon className={`w-10 h-10 mb-4 ${index === 0 ? "text-violet-400" : "text-zinc-400"}`} />
-                <h3 className="text-xl font-semibold mb-2">{card.title}</h3>
-                <p className="text-zinc-400 text-sm mb-4">{card.description}</p>
-                <p className="text-xs text-zinc-500">{card.specs}</p>
-              </div>
-            ))}
-          </div>
-          
-          <div className="text-center mt-10">
-            <Link
-              href="/compare"
-              className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 font-medium"
-            >
-              See full comparison
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-b from-zinc-900 to-zinc-950">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-            Ready to Build Your Dream PC?
-          </h2>
-          <p className="text-zinc-400 text-lg mb-10">
-            Let our AI guide you through every step, from part selection to final build.
-          </p>
-          <Link
-            href="/builder"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 text-white font-semibold rounded-xl transition-all hover:shadow-xl hover:shadow-violet-500/25"
-          >
-            <Cpu className="w-5 h-5" />
-            Launch PC Builder
+          <Link href="/builder" className="hidden sm:flex items-center gap-2 text-[#ffa828] hover:text-[#ff4b4b] font-medium transition-colors">
+            View All Parts <ArrowRight className="w-4 h-4" />
           </Link>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {curatedBuilds.map((build) => (
+            <div key={build.id} className="group relative bg-[#1c1917] border border-[#292524] rounded-2xl overflow-hidden hover:border-[#ff4b4b] transition-all hover:translate-y-[-4px]">
+              <div className={`h-2 bg-gradient-to-r ${build.id === 1 ? 'from-[#ffa828] to-yellow-500' : build.id === 2 ? 'from-[#ff4b4b] to-red-600' : 'from-[#c678dd] to-purple-600'}`} />
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="font-bold text-lg leading-tight">{build.name}</h3>
+                  <span className="font-mono text-[#ff4b4b] font-bold">${build.price}</span>
+                </div>
+
+                <div className="space-y-3 mb-6">
+                  <div className="text-sm text-stone-400 pb-3 border-b border-[#292524]">
+                    {build.specs}
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-stone-500">Bottleneck</span>
+                    <span className="text-stone-300 font-medium">{build.bottleneck}</span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-stone-500">Value Score</span>
+                    <span className="text-[#ffa828] font-medium">{build.valueScore}</span>
+                  </div>
+                </div>
+
+                <Link
+                  href={`/builder?cpu=${encodeURIComponent(build.specs.split(" • ")[0])}&gpu=${encodeURIComponent(build.specs.split(" • ")[1])}`}
+                  className="block w-full text-center py-2.5 bg-[#292524] hover:bg-[#ff4b4b] hover:text-white text-stone-300 rounded-lg text-sm font-medium transition-colors"
+                >
+                  View Build Details
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Ecosystem Comparison */}
+      <section className="py-24 bg-[#1c1917]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-3xl font-bold mb-6">PC vs. Console</h2>
+              <p className="text-stone-400 text-lg mb-8">
+                Is a $500 console actually cheaper than a PC? We crunch the numbers on long-term costs, not just hardware price.
+              </p>
+
+              <div className="flex gap-4 mb-8">
+                <button
+                  onClick={() => setActiveEcosystem("pc")}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${activeEcosystem === "pc"
+                    ? "bg-[#ff4b4b] text-white"
+                    : "bg-[#292524] text-stone-400 hover:text-white"
+                    }`}
+                >
+                  <Monitor className="w-5 h-5" /> Gaming PC
+                </button>
+                <button
+                  onClick={() => setActiveEcosystem("console")}
+                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${activeEcosystem === "console"
+                    ? "bg-[#ff4b4b] text-white"
+                    : "bg-[#292524] text-stone-400 hover:text-white"
+                    }`}
+                >
+                  <Gamepad2 className="w-5 h-5" /> Console
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className={`p-2 rounded-lg ${activeEcosystem === "pc" ? "bg-[#ffa828]/20 text-[#ffa828]" : "bg-[#292524] text-stone-500"}`}>
+                    <TrendingUp className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-stone-500">Average FPS (1440p)</div>
+                    <div className="text-xl font-bold">{activeEcosystem === "pc" ? "110+ FPS" : "60 FPS (capped)"}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className={`p-2 rounded-lg ${activeEcosystem === "pc" ? "bg-[#c678dd]/20 text-[#c678dd]" : "bg-[#292524] text-stone-500"}`}>
+                    <Zap className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-stone-500">Game Cost (5 Yr)</div>
+                    <div className="text-xl font-bold">{activeEcosystem === "pc" ? "~$250 (Sales & Bundles)" : "~$600 (Full Price)"}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#ff4b4b]/10 to-[#ffa828]/10 blur-3xl rounded-full" />
+              <div className="relative bg-[#171514] border border-[#292524] rounded-2xl p-8">
+                {/* Visual Bar Chart Animation */}
+                <div className="space-y-6">
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-stone-400">Total 5-Year Cost</span>
+                      <span className="text-stone-200 font-bold">{activeEcosystem === "pc" ? "$1,850" : "$2,100"}</span>
+                    </div>
+                    <div className="h-4 bg-[#292524] rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full bg-[#ff4b4b]"
+                        initial={{ width: "50%" }}
+                        animate={{ width: activeEcosystem === "pc" ? "65%" : "85%" }}
+                        transition={{ type: "spring", bounce: 0.2 }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-stone-400">Performance Score</span>
+                      <span className="text-stone-200 font-bold">{activeEcosystem === "pc" ? "92/100" : "75/100"}</span>
+                    </div>
+                    <div className="h-4 bg-[#292524] rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full bg-[#ffa828]"
+                        initial={{ width: "50%" }}
+                        animate={{ width: activeEcosystem === "pc" ? "92%" : "75%" }}
+                        transition={{ type: "spring", bounce: 0.2 }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-8 border-t border-[#292524] text-center">
+                  <p className="text-stone-400 text-sm mb-4">
+                    {activeEcosystem === "pc"
+                      ? "PC has a higher upfront cost, but saves money long-term on games and subscriptions."
+                      : "Consoles are cheaper upfront, but online fees and game prices add up fast."}
+                  </p>
+                  <Link href="/compare" className="text-[#ffa828] hover:text-[#ff4b4b] text-sm font-medium flex items-center justify-center gap-1">
+                    See Full Breakdown <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 border-t border-zinc-800">
+      <footer className="py-8 border-t border-[#292524] bg-[#171514]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-zinc-500 text-sm">
-              © 2026 SiliconSage. Built with Next.js, FastAPI & Scikit-Learn.
+            <p className="text-stone-500 text-sm">
+              © 2026 SiliconSage. Only the truth about hardware.
             </p>
-            <div className="flex items-center gap-6 text-sm text-zinc-500">
-              <Link href="/builder" className="hover:text-white transition-colors">Builder</Link>
-              <Link href="/compare" className="hover:text-white transition-colors">Compare</Link>
-              <Link href="/advisor" className="hover:text-white transition-colors">AI Advisor</Link>
+            <div className="flex items-center gap-6 text-sm text-stone-500">
+              <Link href="/builder" className="hover:text-[#ff4b4b] transition-colors">Builder</Link>
+              <Link href="/compare" className="hover:text-[#ff4b4b] transition-colors">Ecosystems</Link>
+              <Link href="/advisor" className="hover:text-[#ff4b4b] transition-colors">Advisor</Link>
             </div>
           </div>
         </div>

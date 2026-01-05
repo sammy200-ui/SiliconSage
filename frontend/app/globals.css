@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #09090b;
-  --foreground: #fafafa;
+  --background: #171514;
+  /* warm charcoal */
+  --foreground: #f5f5f4;
+  /* stone-100 */
 }
 
 @theme inline {
@@ -10,6 +12,11 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-warm-red: #ff4b4b;
+  --color-warm-orange: #ffa828;
+  --color-warm-purple: #c678dd;
+  --color-warm-black: #171514;
 }
 
 body {
@@ -25,48 +32,47 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #18181b;
+  background: #292524;
+  /* stone-800 */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3f3f46;
+  background: #44403c;
+  /* stone-700 */
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
+  background: #57534e;
+  /* stone-600 */
 }
 
-/* Gradient text utility */
-.gradient-text {
-  background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Glass morphism */
+/* Flat glass effect */
 .glass {
-  background: rgba(24, 24, 27, 0.8);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(63, 63, 70, 0.5);
+  background: #1c1917;
+  /* stone-900 solid for flat look, or very high opacity */
+  border: 1px solid #292524;
+  /* stone-800 */
 }
 
-/* Glow effects */
-.glow-violet {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+/* Flat Glow effects */
+.glow-red {
+  box-shadow: 0 4px 0 #991b1b;
+  /* solid shadow style */
 }
 
-.glow-cyan {
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+.glow-orange {
+  box-shadow: 0 4px 0 #9a3412;
+  /* solid shadow style */
 }
 
-/* PC Part card hover effect */
+/* PC Part card hover effect - Flat */
 .part-card {
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease-out;
+  border: 1px solid #292524;
 }
 
 .part-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+  border-color: var(--color-warm-orange);
 }

@@ -21,42 +21,41 @@ export function BuildVisualizer({ build }: BuildVisualizerProps) {
   ];
 
   return (
-    <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl">
-      <h3 className="text-sm font-medium text-zinc-400 mb-4">Build Preview</h3>
-      
+    <div className="p-6 bg-[#1c1917] border border-[#292524] rounded-xl">
+      <h3 className="text-sm font-medium text-stone-400 mb-4">Build Preview</h3>
+
       {/* 2D Visualization */}
-      <div className="relative aspect-square bg-zinc-950 rounded-lg border border-zinc-800 overflow-hidden">
+      <div className="relative aspect-square bg-[#171514] rounded-lg border border-[#292524] overflow-hidden">
         {/* Case outline */}
-        <div className="absolute inset-4 border-2 border-dashed border-zinc-700 rounded-lg" />
-        
+        <div className="absolute inset-4 border-2 border-dashed border-[#292524] rounded-lg" />
+
         {/* Motherboard area */}
-        <div className="absolute top-8 left-8 right-16 bottom-24 border border-zinc-700 rounded bg-zinc-900/50" />
-        
+        <div className="absolute top-8 left-8 right-16 bottom-24 border border-[#292524] rounded bg-[#292524]/50" />
+
         {/* Parts */}
         {parts.map((part) => (
           <motion.div
             key={part.key}
             initial={{ scale: 0, opacity: 0 }}
-            animate={{ 
-              scale: part.selected ? 1 : 0.8, 
-              opacity: part.selected ? 1 : 0.3 
+            animate={{
+              scale: part.selected ? 1 : 0.8,
+              opacity: part.selected ? 1 : 0.3
             }}
             transition={{ type: "spring", bounce: 0.4 }}
             className="absolute flex flex-col items-center"
-            style={{ 
-              left: `${part.position.x}%`, 
+            style={{
+              left: `${part.position.x}%`,
               top: `${part.position.y}%`,
               transform: "translate(-50%, -50%)"
             }}
           >
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-              part.selected 
-                ? "bg-gradient-to-br from-violet-600 to-cyan-600 shadow-lg shadow-violet-500/30" 
-                : "bg-zinc-800 border border-zinc-700"
-            }`}>
-              <part.icon className={`w-5 h-5 ${part.selected ? "text-white" : "text-zinc-500"}`} />
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${part.selected
+                ? "bg-[#ffa828] shadow-lg shadow-[#ffa828]/20"
+                : "bg-[#292524] border border-[#44403c]"
+              }`}>
+              <part.icon className={`w-5 h-5 ${part.selected ? "text-[#171514]" : "text-stone-500"}`} />
             </div>
-            <span className={`text-xs mt-1 ${part.selected ? "text-zinc-300" : "text-zinc-600"}`}>
+            <span className={`text-xs mt-1 ${part.selected ? "text-stone-300" : "text-stone-600"}`}>
               {part.label}
             </span>
           </motion.div>
@@ -70,7 +69,7 @@ export function BuildVisualizer({ build }: BuildVisualizerProps) {
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
               x1="45" y1="30" x2="45" y2="45"
-              className="stroke-emerald-500"
+              className="stroke-[#ff4b4b]"
               strokeWidth="0.5"
               strokeDasharray="2,2"
             />
@@ -81,7 +80,7 @@ export function BuildVisualizer({ build }: BuildVisualizerProps) {
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
               x1="65" y1="30" x2="55" y2="45"
-              className="stroke-emerald-500"
+              className="stroke-[#ff4b4b]"
               strokeWidth="0.5"
               strokeDasharray="2,2"
             />
@@ -92,7 +91,7 @@ export function BuildVisualizer({ build }: BuildVisualizerProps) {
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
               x1="45" y1="55" x2="45" y2="65"
-              className="stroke-emerald-500"
+              className="stroke-[#ff4b4b]"
               strokeWidth="0.5"
               strokeDasharray="2,2"
             />
@@ -103,12 +102,12 @@ export function BuildVisualizer({ build }: BuildVisualizerProps) {
       {/* Legend */}
       <div className="mt-4 flex flex-wrap gap-3 justify-center">
         <div className="flex items-center gap-1.5 text-xs">
-          <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-violet-600 to-cyan-600" />
-          <span className="text-zinc-400">Selected</span>
+          <div className="w-2.5 h-2.5 rounded-full bg-[#ffa828]" />
+          <span className="text-stone-400">Selected</span>
         </div>
         <div className="flex items-center gap-1.5 text-xs">
-          <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-          <span className="text-zinc-500">Empty</span>
+          <div className="w-2.5 h-2.5 rounded-full bg-[#292524]" />
+          <span className="text-stone-500">Empty</span>
         </div>
       </div>
     </div>

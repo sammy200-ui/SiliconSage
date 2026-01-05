@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function AdvisorPage() {
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-[#171514]">
       <AdvisorChat />
     </div>
   );

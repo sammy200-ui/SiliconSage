@@ -2,9 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { 
+import {
   Monitor, Gamepad2, Laptop,
-  Check, X, ArrowRight 
+  Check, X, ArrowRight
 } from "lucide-react";
 import Link from "next/link";
 
@@ -166,8 +166,8 @@ export function EcosystemComparison() {
   }, [budget]);
 
   const toggleSystem = (id: string) => {
-    setSelectedSystems((prev) => 
-      prev.includes(id) 
+    setSelectedSystems((prev) =>
+      prev.includes(id)
         ? prev.filter((s) => s !== id)
         : prev.length < 4 ? [...prev, id] : prev
     );
@@ -203,13 +203,13 @@ export function EcosystemComparison() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Ecosystem Comparison</h1>
-        <p className="text-zinc-400">PC vs Console vs Laptop — Find the best value for your needs</p>
+        <p className="text-stone-400">PC vs Console vs Laptop — Find the best value for your needs</p>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-6 mb-8 p-6 bg-zinc-900 border border-zinc-800 rounded-xl">
+      <div className="flex flex-wrap gap-6 mb-8 p-6 bg-[#1c1917] border border-[#292524] rounded-xl">
         <div>
-          <label className="block text-sm text-zinc-400 mb-2">Budget</label>
+          <label className="block text-sm text-stone-400 mb-2">Budget</label>
           <div className="flex items-center gap-4">
             <input
               type="range"
@@ -218,24 +218,23 @@ export function EcosystemComparison() {
               step={100}
               value={budget}
               onChange={(e) => setBudget(parseInt(e.target.value))}
-              className="w-40 accent-violet-500"
+              className="w-40 accent-[#ff4b4b]"
             />
-            <span className="text-lg font-semibold text-emerald-400">${budget}</span>
+            <span className="text-lg font-semibold text-[#ffa828]">${budget}</span>
           </div>
         </div>
-        
+
         <div>
-          <label className="block text-sm text-zinc-400 mb-2">Priority</label>
+          <label className="block text-sm text-stone-400 mb-2">Priority</label>
           <div className="flex gap-2">
             {(["performance", "value", "portability"] as const).map((p) => (
               <button
                 key={p}
                 onClick={() => setPriority(p)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize ${
-                  priority === p
-                    ? "bg-violet-600 text-white"
-                    : "bg-zinc-800 text-zinc-400 hover:text-white"
-                }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize ${priority === p
+                  ? "bg-[#ff4b4b] text-white"
+                  : "bg-[#292524] text-stone-400 hover:text-white"
+                  }`}
               >
                 {p}
               </button>
@@ -252,17 +251,15 @@ export function EcosystemComparison() {
             <button
               key={system.id}
               onClick={() => toggleSystem(system.id)}
-              className={`p-4 rounded-xl border text-left transition-all ${
-                selectedSystems.includes(system.id)
-                  ? "bg-violet-950/50 border-violet-500"
-                  : "bg-zinc-900 border-zinc-800 hover:border-zinc-700"
-              }`}
+              className={`p-4 rounded-xl border text-left transition-all ${selectedSystems.includes(system.id)
+                ? "bg-[#1c1917] border-[#ffa828]"
+                : "bg-[#171514] border-[#292524] hover:border-[#44403c]"
+                }`}
             >
-              <system.icon className={`w-6 h-6 mb-2 ${
-                selectedSystems.includes(system.id) ? "text-violet-400" : "text-zinc-500"
-              }`} />
+              <system.icon className={`w-6 h-6 mb-2 ${selectedSystems.includes(system.id) ? "text-[#ffa828]" : "text-stone-500"
+                }`} />
               <div className="font-medium text-sm">{system.name}</div>
-              <div className="text-sm text-emerald-400">${system.price}</div>
+              <div className="text-sm text-[#ff4b4b]">${system.price}</div>
             </button>
           ))}
         </div>
@@ -270,20 +267,20 @@ export function EcosystemComparison() {
 
       {/* Comparison Table */}
       {compareData.length > 0 && (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+        <div className="bg-[#1c1917] border border-[#292524] rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-zinc-800">
-                  <th className="text-left p-4 text-sm font-medium text-zinc-400">Spec</th>
+                <tr className="border-b border-[#292524]">
+                  <th className="text-left p-4 text-sm font-medium text-stone-400">Spec</th>
                   {compareData.map((system) => (
                     <th key={system.id} className="p-4 text-center min-w-[180px]">
                       <div className="flex flex-col items-center gap-2">
-                        <system.icon className="w-8 h-8 text-violet-400" />
-                        <span className="font-semibold">{system.name}</span>
-                        <span className="text-lg font-bold text-emerald-400">${system.price}</span>
+                        <system.icon className="w-8 h-8 text-[#ffa828]" />
+                        <span className="font-semibold text-stone-200">{system.name}</span>
+                        <span className="text-lg font-bold text-[#ff4b4b]">${system.price}</span>
                         {getBestFor(priority) === system.id && (
-                          <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded-full">
+                          <span className="px-2 py-1 bg-[#ff4b4b] text-white text-xs rounded-full">
                             Best {priority}
                           </span>
                         )}
@@ -293,80 +290,78 @@ export function EcosystemComparison() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b border-zinc-800">
-                  <td className="p-4 text-sm text-zinc-400">FPS @ 1080p</td>
+                <tr className="border-b border-[#292524]">
+                  <td className="p-4 text-sm text-stone-400">FPS @ 1080p</td>
                   {compareData.map((s) => (
-                    <td key={s.id} className="p-4 text-center font-semibold">
+                    <td key={s.id} className="p-4 text-center font-semibold text-stone-200">
                       {s.fps1080p} FPS
                     </td>
                   ))}
                 </tr>
-                <tr className="border-b border-zinc-800">
-                  <td className="p-4 text-sm text-zinc-400">FPS @ 1440p</td>
+                <tr className="border-b border-[#292524]">
+                  <td className="p-4 text-sm text-stone-400">FPS @ 1440p</td>
                   {compareData.map((s) => (
-                    <td key={s.id} className="p-4 text-center font-semibold">
+                    <td key={s.id} className="p-4 text-center font-semibold text-stone-200">
                       {s.fps1440p} FPS
                     </td>
                   ))}
                 </tr>
-                <tr className="border-b border-zinc-800">
-                  <td className="p-4 text-sm text-zinc-400">FPS @ 4K</td>
+                <tr className="border-b border-[#292524]">
+                  <td className="p-4 text-sm text-stone-400">FPS @ 4K</td>
                   {compareData.map((s) => (
-                    <td key={s.id} className="p-4 text-center font-semibold">
+                    <td key={s.id} className="p-4 text-center font-semibold text-stone-200">
                       {s.fps4k > 0 ? `${s.fps4k} FPS` : "N/A"}
                     </td>
                   ))}
                 </tr>
-                <tr className="border-b border-zinc-800">
-                  <td className="p-4 text-sm text-zinc-400">Storage</td>
+                <tr className="border-b border-[#292524]">
+                  <td className="p-4 text-sm text-stone-400">Storage</td>
                   {compareData.map((s) => (
-                    <td key={s.id} className="p-4 text-center">{s.storage}</td>
+                    <td key={s.id} className="p-4 text-center text-stone-200">{s.storage}</td>
                   ))}
                 </tr>
-                <tr className="border-b border-zinc-800">
-                  <td className="p-4 text-sm text-zinc-400">Upgradeability</td>
+                <tr className="border-b border-[#292524]">
+                  <td className="p-4 text-sm text-stone-400">Upgradeability</td>
                   {compareData.map((s) => (
                     <td key={s.id} className="p-4 text-center">
-                      <span className={`capitalize ${
-                        s.upgradeability === "high" ? "text-emerald-400" :
-                        s.upgradeability === "medium" ? "text-yellow-400" :
-                        s.upgradeability === "low" ? "text-amber-400" : "text-red-400"
-                      }`}>
+                      <span className={`capitalize ${s.upgradeability === "high" ? "text-[#ffa828]" :
+                        s.upgradeability === "medium" ? "text-[#c678dd]" :
+                          s.upgradeability === "low" ? "text-stone-400" : "text-[#ff4b4b]"
+                        }`}>
                         {s.upgradeability}
                       </span>
                     </td>
                   ))}
                 </tr>
-                <tr className="border-b border-zinc-800">
-                  <td className="p-4 text-sm text-zinc-400">Portability</td>
+                <tr className="border-b border-[#292524]">
+                  <td className="p-4 text-sm text-stone-400">Portability</td>
                   {compareData.map((s) => (
                     <td key={s.id} className="p-4 text-center">
-                      <span className={`capitalize ${
-                        s.portability === "high" ? "text-emerald-400" :
-                        s.portability === "medium" ? "text-yellow-400" :
-                        s.portability === "low" ? "text-amber-400" : "text-red-400"
-                      }`}>
+                      <span className={`capitalize ${s.portability === "high" ? "text-[#ffa828]" :
+                        s.portability === "medium" ? "text-[#c678dd]" :
+                          s.portability === "low" ? "text-stone-400" : "text-[#ff4b4b]"
+                        }`}>
                         {s.portability === "none" ? "Desktop only" : s.portability}
                       </span>
                     </td>
                   ))}
                 </tr>
-                <tr className="border-b border-zinc-800">
-                  <td className="p-4 text-sm text-zinc-400">Value Score</td>
+                <tr className="border-b border-[#292524]">
+                  <td className="p-4 text-sm text-stone-400">Value Score</td>
                   {compareData.map((s) => {
                     const value = calculateValue(s);
                     const maxValue = Math.max(...compareData.map(calculateValue));
                     return (
                       <td key={s.id} className="p-4">
                         <div className="flex items-center justify-center gap-2">
-                          <div className="w-24 h-2 bg-zinc-700 rounded-full overflow-hidden">
+                          <div className="w-24 h-2 bg-[#292524] rounded-full overflow-hidden">
                             <motion.div
                               initial={{ width: 0 }}
                               animate={{ width: `${(value / maxValue) * 100}%` }}
-                              className="h-full bg-gradient-to-r from-violet-500 to-cyan-500"
+                              className="h-full bg-[#ff4b4b]"
                             />
                           </div>
-                          <span className="text-sm font-medium">{Math.round(value)}</span>
+                          <span className="text-sm font-medium text-stone-200">{Math.round(value)}</span>
                         </div>
                       </td>
                     );
@@ -386,34 +381,34 @@ export function EcosystemComparison() {
               key={system.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl"
+              className="p-6 bg-[#1c1917] border border-[#292524] rounded-xl"
             >
               <div className="flex items-center gap-3 mb-4">
-                <system.icon className="w-8 h-8 text-violet-400" />
+                <system.icon className="w-8 h-8 text-[#ffa828]" />
                 <div>
-                  <h3 className="font-semibold">{system.name}</h3>
-                  <span className="text-emerald-400 font-medium">${system.price}</span>
+                  <h3 className="font-semibold text-stone-200">{system.name}</h3>
+                  <span className="text-[#ff4b4b] font-medium">${system.price}</span>
                 </div>
               </div>
-              
+
               <div className="space-y-3">
                 <div>
-                  <span className="text-sm text-zinc-400">Pros</span>
+                  <span className="text-sm text-stone-400">Pros</span>
                   <ul className="mt-1 space-y-1">
                     {system.pros.map((pro) => (
-                      <li key={pro} className="flex items-center gap-2 text-sm">
-                        <Check className="w-4 h-4 text-emerald-400" />
+                      <li key={pro} className="flex items-center gap-2 text-sm text-stone-300">
+                        <Check className="w-4 h-4 text-[#ffa828]" />
                         {pro}
                       </li>
                     ))}
                   </ul>
                 </div>
                 <div>
-                  <span className="text-sm text-zinc-400">Cons</span>
+                  <span className="text-sm text-stone-400">Cons</span>
                   <ul className="mt-1 space-y-1">
                     {system.cons.map((con) => (
-                      <li key={con} className="flex items-center gap-2 text-sm">
-                        <X className="w-4 h-4 text-red-400" />
+                      <li key={con} className="flex items-center gap-2 text-sm text-stone-300">
+                        <X className="w-4 h-4 text-[#ff4b4b]" />
                         {con}
                       </li>
                     ))}
@@ -421,8 +416,8 @@ export function EcosystemComparison() {
                 </div>
                 {system.exclusives.length > 0 && (
                   <div>
-                    <span className="text-sm text-zinc-400">Exclusives</span>
-                    <p className="text-sm mt-1">{system.exclusives.join(", ")}</p>
+                    <span className="text-sm text-stone-400">Exclusives</span>
+                    <p className="text-sm mt-1 text-stone-300">{system.exclusives.join(", ")}</p>
                   </div>
                 )}
               </div>
@@ -433,12 +428,12 @@ export function EcosystemComparison() {
 
       {/* CTA */}
       <div className="mt-12 text-center">
-        <p className="text-zinc-400 mb-4">
+        <p className="text-stone-400 mb-4">
           Decided on building a PC? Let us help you pick the perfect parts.
         </p>
         <Link
           href="/builder"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 text-white font-semibold rounded-xl transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-[#ff4b4b] hover:bg-[#ffa828] text-white font-semibold rounded-xl transition-all"
         >
           Start Building
           <ArrowRight className="w-5 h-5" />

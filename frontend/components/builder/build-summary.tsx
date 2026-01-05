@@ -32,29 +32,29 @@ export function BuildSummary({ build }: BuildSummaryProps) {
   ];
 
   return (
-    <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl">
+    <div className="p-6 bg-[#1c1917] border border-[#292524] rounded-xl">
       <h3 className="font-semibold mb-4">Parts List</h3>
-      
+
       <div className="space-y-2">
         {parts.map((part) => (
-          <div key={part.label} className="flex items-center justify-between py-2 border-b border-zinc-800 last:border-0">
+          <div key={part.label} className="flex items-center justify-between py-2 border-b border-[#292524] last:border-0">
             <div>
-              <span className="text-sm text-zinc-400">{part.label}</span>
+              <span className="text-sm text-stone-400">{part.label}</span>
               {part.value && (
                 <p className="text-sm font-medium truncate max-w-[200px]">{part.value}</p>
               )}
             </div>
             {part.price && (
-              <span className="text-sm font-medium text-emerald-400">${part.price.toFixed(2)}</span>
+              <span className="text-sm font-medium text-[#c678dd]">${part.price.toFixed(2)}</span>
             )}
           </div>
         ))}
       </div>
-      
-      <div className="mt-4 pt-4 border-t border-zinc-700">
+
+      <div className="mt-4 pt-4 border-t border-[#292524]">
         <div className="flex items-center justify-between">
           <span className="font-semibold">Total</span>
-          <span className="text-xl font-bold text-emerald-400">${calculateTotalPrice().toFixed(2)}</span>
+          <span className="text-xl font-bold text-[#ff4b4b]">${calculateTotalPrice().toFixed(2)}</span>
         </div>
       </div>
     </div>

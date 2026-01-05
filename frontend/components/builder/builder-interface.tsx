@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Cpu, MonitorSpeaker, CircuitBoard, MemoryStick, HardDrive, 
+import {
+  Cpu, MonitorSpeaker, CircuitBoard, MemoryStick, HardDrive,
   Zap, Box, Fan, Plus, Trash2, AlertTriangle, CheckCircle, Info
 } from "lucide-react";
 import { PartSelector } from "./part-selector";
@@ -40,6 +41,7 @@ export interface BuildState {
 }
 
 export function BuilderInterface() {
+  const searchParams = useSearchParams();
   const [build, setBuild] = useState<BuildState>({
     cpu: null,
     gpu: null,
@@ -50,7 +52,30 @@ export function BuilderInterface() {
     case: null,
     cooler: null,
   });
-  
+
+  // Effect to parse search params and pre-fill build
+  useEffect(() => {
+    // This is a simplified way to pre-fill. In a real app we'd fetch by ID.
+    // Here we'll construct "mock" parts from params to support the "Curated Builds" feature.
+    const cpuName = searchParams.get("cpu");
+    const gpuName = searchParams.get("gpu");
+
+    if (cpuName || gpuName) {
+      setBuild(prev => ({
+        ...prev,
+        cpu: cpuName ? {
+          id: "pre-cpu", name: cpuName, price: Number(searchParams.get("cpu_price")) || 200,
+          core_count: 6, core_clock: 3.5, boost_clock: 4.4, tdp: 65, integrated_graphics: null, graphics: null, microarchitecture: "Zen 3"
+        } as CPU : prev.cpu,
+        gpu: gpuName ? {
+          id: "pre-gpu", name: gpuName, price: Number(searchParams.get("gpu_price")) || 300,
+          chipset: "Radeon", memory: 8, core_clock: 2000, boost_clock: 2400, length: 240
+        } as GPU : prev.gpu,
+        // We can add RAM/Mobo here too if needed, but keeping it simple for now
+      }));
+    }
+  }, [searchParams]);
+
   const [activeCategory, setActiveCategory] = useState<PartCategoryId | null>(null);
   const [showAnalysis, setShowAnalysis] = useState(false);
 
@@ -117,7 +142,7 @@ export function BuilderInterface() {
 
   const checkCompatibility = useCallback(() => {
     const issues: string[] = [];
-    
+
     // CPU-Motherboard socket check (infer from microarchitecture)
     if (build.cpu && build.motherboard) {
       const cpuSocket = inferCPUSocket(build.cpu.microarchitecture);
@@ -125,7 +150,7 @@ export function BuilderInterface() {
         issues.push(`CPU socket (${cpuSocket}) doesn't match motherboard socket (${build.motherboard.socket})`);
       }
     }
-    
+
     // RAM-Motherboard DDR compatibility (basic check based on naming)
     if (build.ram && build.motherboard && build.ram.speed_ddr) {
       const ramDDR = build.ram.speed_ddr; // DDR version
@@ -137,7 +162,7 @@ export function BuilderInterface() {
         issues.push(`DDR4 RAM may not be compatible with DDR5 motherboard`);
       }
     }
-    
+
     // PSU wattage check
     if (build.psu) {
       const requiredWattage = calculateTotalWattage();
@@ -146,7 +171,7 @@ export function BuilderInterface() {
         issues.push(`PSU wattage (${build.psu.wattage}W) may be insufficient. Recommended: ${Math.ceil(recommendedPsu)}W`);
       }
     }
-    
+
     // GPU-Case form factor check (basic compatibility)
     if (build.gpu && build.case && build.gpu.length) {
       // Most cases support 300mm+ GPUs, warn if GPU is very long
@@ -154,7 +179,7 @@ export function BuilderInterface() {
         issues.push(`Large GPU (${build.gpu.length}mm) - verify case compatibility`);
       }
     }
-    
+
     return issues;
   }, [build, calculateTotalWattage, inferCPUSocket]);
 
@@ -166,7 +191,7 @@ export function BuilderInterface() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">PC Builder</h1>
-        <p className="text-zinc-400">Select your components to build your dream PC</p>
+        <p className="text-stone-400">Select your components to build your dream PC</p>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -176,33 +201,31 @@ export function BuilderInterface() {
             const Icon = category.icon;
             const part = category.id === "storage" ? build.storage : build[category.id];
             const hasPart = category.id === "storage" ? build.storage.length > 0 : !!part;
-            
+
             return (
               <motion.div
                 key={category.id}
                 layout
-                className={`p-4 rounded-xl border transition-all ${
-                  hasPart 
-                    ? "bg-zinc-900 border-zinc-700" 
-                    : "bg-zinc-900/50 border-zinc-800 border-dashed"
-                }`}
+                className={`p-4 rounded-xl border transition-all ${hasPart
+                  ? "bg-[#1c1917] border-[#292524]"
+                  : "bg-[#171514] border-[#292524] border-dashed"
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      hasPart ? "bg-violet-600" : "bg-zinc-800"
-                    }`}>
-                      <Icon className="w-5 h-5" />
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${hasPart ? "bg-[#ffa828]" : "bg-[#292524]"
+                      }`}>
+                      <Icon className="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{category.label}</span>
                         {category.required && !hasPart && (
-                          <span className="text-xs text-amber-500">Required</span>
+                          <span className="text-xs text-[#ff4b4b]">Required</span>
                         )}
                       </div>
                       {hasPart ? (
-                        <div className="text-sm text-zinc-400">
+                        <div className="text-sm text-stone-400">
                           {category.id === "storage" ? (
                             build.storage.map(s => s.name).join(", ")
                           ) : (
@@ -210,23 +233,23 @@ export function BuilderInterface() {
                           )}
                         </div>
                       ) : (
-                        <div className="text-sm text-zinc-500">Not selected</div>
+                        <div className="text-sm text-stone-500">Not selected</div>
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     {hasPart && (
                       <>
-                        <span className="text-sm font-medium text-emerald-400">
-                          ${category.id === "storage" 
+                        <span className="text-sm font-medium text-[#c678dd]">
+                          ${category.id === "storage"
                             ? build.storage.reduce((sum, s) => sum + (s.price || 0), 0).toFixed(2)
                             : ((part as AnyPart)?.price || 0).toFixed(2)
                           }
                         </span>
                         <button
                           onClick={() => handleRemovePart(category.id)}
-                          className="p-2 text-zinc-500 hover:text-red-400 transition-colors"
+                          className="p-2 text-stone-500 hover:text-[#ff4b4b] transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -234,11 +257,10 @@ export function BuilderInterface() {
                     )}
                     <button
                       onClick={() => setActiveCategory(category.id)}
-                      className={`p-2 rounded-lg transition-colors ${
-                        hasPart 
-                          ? "text-zinc-400 hover:text-white hover:bg-zinc-800" 
-                          : "bg-violet-600 hover:bg-violet-500 text-white"
-                      }`}
+                      className={`p-2 rounded-lg transition-colors ${hasPart
+                        ? "text-stone-400 hover:text-white hover:bg-[#292524]"
+                        : "bg-[#ff4b4b] hover:bg-[#ffa828] text-white"
+                        }`}
                     >
                       <Plus className="w-5 h-5" />
                     </button>
@@ -252,50 +274,49 @@ export function BuilderInterface() {
         {/* Right Column - Summary & Visualizer */}
         <div className="space-y-6">
           {/* Build Summary */}
-          <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl">
+          <div className="p-6 bg-[#1c1917] border border-[#292524] rounded-xl">
             <h2 className="text-lg font-semibold mb-4">Build Summary</h2>
-            
+
             <div className="space-y-3 mb-6">
               <div className="flex justify-between">
-                <span className="text-zinc-400">Total Price</span>
-                <span className="text-2xl font-bold text-emerald-400">
+                <span className="text-stone-400">Total Price</span>
+                <span className="text-2xl font-bold text-[#ff4b4b]">
                   ${calculateTotalPrice().toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-400">Est. Wattage</span>
+                <span className="text-stone-400">Est. Wattage</span>
                 <span className="font-medium">{calculateTotalWattage()}W</span>
               </div>
             </div>
-            
+
             {/* Compatibility Status */}
-            <div className={`p-4 rounded-lg ${
-              compatibilityIssues.length > 0 
-                ? "bg-amber-950/30 border border-amber-800/50" 
-                : isComplete
-                  ? "bg-emerald-950/30 border border-emerald-800/50"
-                  : "bg-zinc-800/50 border border-zinc-700"
-            }`}>
+            <div className={`p-4 rounded-lg ${compatibilityIssues.length > 0
+              ? "bg-[#292524] border border-[#ff4b4b]"
+              : isComplete
+                ? "bg-[#292524] border border-[#ffa828]"
+                : "bg-[#171514] border border-[#292524]"
+              }`}>
               <div className="flex items-center gap-2 mb-2">
                 {compatibilityIssues.length > 0 ? (
                   <>
-                    <AlertTriangle className="w-5 h-5 text-amber-500" />
-                    <span className="font-medium text-amber-500">Compatibility Issues</span>
+                    <AlertTriangle className="w-5 h-5 text-[#ff4b4b]" />
+                    <span className="font-medium text-[#ff4b4b]">Compatibility Issues</span>
                   </>
                 ) : isComplete ? (
                   <>
-                    <CheckCircle className="w-5 h-5 text-emerald-500" />
-                    <span className="font-medium text-emerald-500">All Compatible</span>
+                    <CheckCircle className="w-5 h-5 text-[#ffa828]" />
+                    <span className="font-medium text-[#ffa828]">All Compatible</span>
                   </>
                 ) : (
                   <>
-                    <Info className="w-5 h-5 text-zinc-400" />
-                    <span className="font-medium text-zinc-400">Select Parts</span>
+                    <Info className="w-5 h-5 text-stone-400" />
+                    <span className="font-medium text-stone-400">Select Parts</span>
                   </>
                 )}
               </div>
               {compatibilityIssues.length > 0 && (
-                <ul className="text-sm text-amber-200/80 space-y-1">
+                <ul className="text-sm text-[#ff4b4b]/80 space-y-1">
                   {compatibilityIssues.map((issue, i) => (
                     <li key={i}>• {issue}</li>
                   ))}
@@ -307,7 +328,7 @@ export function BuilderInterface() {
             {isComplete && (
               <button
                 onClick={() => setShowAnalysis(true)}
-                className="w-full mt-4 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 text-white font-semibold rounded-lg transition-all"
+                className="w-full mt-4 py-3 bg-[#ff4b4b] hover:bg-[#ffa828] text-white font-semibold rounded-lg transition-all"
               >
                 Analyze Build Performance
               </button>
