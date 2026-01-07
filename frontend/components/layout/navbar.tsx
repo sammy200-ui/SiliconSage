@@ -9,7 +9,6 @@ import { useState } from "react";
 const navLinks = [
   { href: "/", label: "Home", icon: Sparkles },
   { href: "/builder", label: "PC Builder", icon: Cpu },
-  { href: "/compare", label: "Compare", icon: BarChart3 },
   { href: "/advisor", label: "AI Advisor", icon: MessageSquare },
 ];
 

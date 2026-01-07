@@ -10,6 +10,7 @@ import {
 import { PartSelector } from "./part-selector";
 import { BuildVisualizer } from "./build-visualizer";
 import { BuilderAdvisor } from "./builder-advisor";
+import { MLAnalysisPanel } from "./ml-analysis-panel";
 import { BottleneckAnalysis } from "./bottleneck-analysis";
 import type { CPU, GPU, Motherboard, RAM, Storage, PSU, Case, CPUCooler } from "@/lib/types/database";
 
@@ -237,8 +238,14 @@ export function BuilderInterface() {
         <div className="lg:col-span-4 space-y-6 sticky top-8">
           <BuildVisualizer build={build} />
 
-          {/* Summary */}
-          <div className="p-6 bg-[#1c1917] border border-[#292524] rounded-xl">
+          {/* ML Performance Lab */}
+          <MLAnalysisPanel build={build} />
+        </div>
+
+        {/* Right Column - Summary & AI Advisor */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Summary - Moved here */}
+          <div className="p-6 bg-[#1c1917] border border-[#292524] rounded-xl sticky top-8 z-10">
             <h2 className="text-lg font-semibold mb-4">Build Summary</h2>
             <div className="space-y-3 mb-6">
               <div className="flex justify-between">
@@ -263,12 +270,8 @@ export function BuilderInterface() {
               </div>
               {compatibilityIssues.length > 0 && <ul className="text-sm text-[#ff4b4b]/80 space-y-1">{compatibilityIssues.map((issue, i) => <li key={i}>• {issue}</li>)}</ul>}
             </div>
-            {isComplete && <button onClick={() => setShowAnalysis(true)} className="w-full mt-4 py-3 bg-[#ff4b4b] hover:bg-[#ffa828] text-white font-semibold rounded-lg transition-all">Analyze Build Performance</button>}
           </div>
-        </div>
 
-        {/* Right Column - AI Advisor */}
-        <div className="lg:col-span-3">
           <BuilderAdvisor build={build} />
         </div>
       </div>

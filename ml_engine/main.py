@@ -11,11 +11,12 @@ import uvicorn
 
 from models.bottleneck import BottleneckCalculator
 from models.value_tier import ValueTierClusterer
+from models.integrity import IntegrityAnalyzer
 
 app = FastAPI(
     title="SiliconSage ML Engine",
     description="AI-Powered PC Part Value Optimization API",
-    version="1.0.0"
+    version="1.1.0"
 )
 
 # CORS middleware for Next.js frontend
@@ -30,35 +31,48 @@ app.add_middleware(
 # Initialize ML models
 bottleneck_calculator = BottleneckCalculator()
 value_clusterer = ValueTierClusterer()
+integrity_analyzer = IntegrityAnalyzer()
 
 
 # Request/Response Models
 class BuildSpecs(BaseModel):
-    cpu_benchmark: float  # PassMark or similar score
-    gpu_benchmark: float  # 3DMark or similar score
+    cpu_benchmark: float
+    gpu_benchmark: float
     ram_gb: int
-    ram_speed: int  # MHz
-    storage_type: str  # "ssd" or "hdd"
-    target_resolution: str  # "1080p", "1440p", "4k"
+    ram_speed: int
+    storage_type: str
+    target_resolution: str
+    # New fields for Integrity
+    cpu_tdp: float
+    gpu_tdp: float
+    psu_wattage: float
+    psu_efficiency: str
+    mobo_chipset: str
+    cpu_clock: float
 
 
 class PartSpec(BaseModel):
     name: str
     price: float
     benchmark_score: float
-    category: str  # "cpu", "gpu", "ram", etc.
+    category: str
 
 
 class FPSPrediction(BaseModel):
     predicted_fps: float
     bottleneck_component: str
-    bottleneck_severity: str  # "none", "minor", "moderate", "severe"
+    bottleneck_severity: str
     recommendation: str
+    # New fields
+    integrity_score: float
+    integrity_status: str
+    integrity_warnings: list[str]
+    integrity_notes: list[str]
 
 
 class ValueTierResult(BaseModel):
-    tier: str  # "budget", "midrange", "highend", "enthusiast"
-    value_score: float  # 0-100
+    tier: str
+    value_score: float
     similar_parts: list[str]
 
 
@@ -74,19 +88,19 @@ async def root():
     """Health check endpoint"""
     return HealthCheck(
         status="healthy",
-        ml_models_loaded=bottleneck_calculator.is_loaded and value_clusterer.is_loaded,
-        version="1.0.0"
+        ml_models_loaded=bottleneck_calculator.is_loaded,
+        version="1.1.0"
     )
 
 
 @app.post("/predict/fps", response_model=FPSPrediction)
 async def predict_fps(specs: BuildSpecs):
     """
-    Predict FPS and detect bottlenecks based on build specifications.
-    Uses RandomForestRegressor trained on benchmark data.
+    Predict FPS, detect bottlenecks, and analyze build integrity.
     """
     try:
-        result = bottleneck_calculator.predict(
+        # FPS & Bottleneck
+        perf_result = bottleneck_calculator.predict(
             cpu_score=specs.cpu_benchmark,
             gpu_score=specs.gpu_benchmark,
             ram_gb=specs.ram_gb,
@@ -94,7 +108,24 @@ async def predict_fps(specs: BuildSpecs):
             storage_type=specs.storage_type,
             resolution=specs.target_resolution
         )
-        return FPSPrediction(**result)
+        
+        # Build Integrity
+        integrity_result = integrity_analyzer.analyze(
+            cpu_tdp=specs.cpu_tdp,
+            gpu_tdp=specs.gpu_tdp,
+            psu_wattage=specs.psu_wattage,
+            psu_efficiency=specs.psu_efficiency,
+            mobo_chipset=specs.mobo_chipset,
+            cpu_clock=specs.cpu_clock
+        )
+
+        return FPSPrediction(
+            **perf_result, 
+            integrity_score=integrity_result["score"],
+            integrity_status=integrity_result["status"],
+            integrity_warnings=integrity_result["warnings"],
+            integrity_notes=integrity_result["notes"]
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
