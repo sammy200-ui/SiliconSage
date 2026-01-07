@@ -1,43 +1,93 @@
-# SiliconSage: The AI-Powered PC Architect 
+# SiliconSage
 
-> **Project Status:** Active Development
-> **Goal:** To build the "Ultimate" PC Part Picker that optimizes for value, performance, and ecosystem (PC vs. Console vs. Laptop).
+SiliconSage is an AI-powered PC building assistant that optimizes computer builds for value and performance using machine learning.
 
 ## Overview
-SiliconSage is not just a compatibility checker. It is a **Value Optimization Engine**. Unlike traditional builders that only check if parts fit, SiliconSage uses Machine Learning to predict performance bottlenecks and Generative AI to offer contextual advice (e.g., "A PS5 is better value than this $700 PC").
 
-## Architecture (Hybrid Microservices)
-This project uses a hybrid architecture to combine the SEO/UI benefits of Next.js with the Data Science capabilities of Python.
+A hybrid application combining a Next.js frontend with a Python (FastAPI) ML backend. It goes beyond compatibility checking to provide real-time performance analytics and architectural advice.
 
-### 1. The Frontend (The Body)
-- **Framework:** Next.js 14+ (App Router)
-- **Styling:** Tailwind CSS + Framer Motion (for 2D hardware visualization)
-- **State:** React Server Components + Server Actions
-- **Deployment:** Vercel (Planned)
+## Key Features
 
-### 2. The ML Engine (The Brain)
-- **Framework:** Python (FastAPI)
-- **ML Library:** Scikit-Learn
-- **Models:**
-    - `RandomForestRegressor`: Predicts FPS based on CPU/GPU/RAM benchmarks.
-    - `K-Means`: Clusters parts into "Value Tiers" for smart upsells.
-- **Data Source:** Static JSON dataset seeded into DB (see below).
+- **PC Builder & Visualizer**: Interactive drag-and-drop interface with schematic visualization.
+- **ML Performance Lab**: Real-time FPS prediction, bottleneck detection, and build integrity analysis (PSU efficiency & Motherboard tier checks).
+- **AI Advisor**: Expert persona ("SiliconSage") powered by Llama 3 for context-aware part recommendations and troubleshooting.
+- **Ecosystem Comparison**: Analytical tool comparing custom builds against consoles (PS5/Xbox) and laptops to ensure optimal value.
 
-### 3. The Data Layer
-- **Database:** Supabase (PostgreSQL)
-- **Vector/AI:** Groq Cloud API (Llama 3) for generating natural language reviews.
-- **Schema:** Relational tables for `cpus`, `gpus`, `motherboards`, `builds`.
+## Technology Stack
 
-##  Data Strategy (Crucial)
-We are avoiding real-time scraping to prevent IP bans and complexity.
-- **Primary Data Source:** **[docyx/pc-part-dataset](https://github.com/docyx/pc-part-dataset)**
-    - *Action:* We download the raw JSON files from this repository.
-    - *Usage:* A `seed.js` script parses these JSONs to populate the Supabase database initially.
-- **Benchmark Data:** Training data for ML models will be sourced from Kaggle (CPU/GPU Benchmarks) to train the Scikit-Learn models.
+### Frontend
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
 
-##  Key Features
-- **Smart Parts Matcher:** A 2D visualizer that dynamically validates physical compatibility (SVG/CSS mapping).
-- **The Bottleneck Calculator:** A regression model that warns users if their CPU is choking their GPU performance.
-- **Ecosystem Comparison:** Real-time logic comparing the user's custom build price/performance against current Consoles (PS5/Xbox) and Gaming Laptops.
-- **AI Advisor:** A chat interface that explains *why* a build is good or bad using Llama 3 (via Groq).
+### Backend (ML Engine)
+- **Framework**: FastAPI (Python)
+- **ML Libraries**: Scikit-Learn, Pandas, NumPy
+- **Server**: Uvicorn
 
+### Infrastructure
+- **Database**: Supabase (PostgreSQL)
+- **AI Inference**: Groq API (Llama 3)
+
+## Setup Instructions
+
+### Prerequisites
+- Node.js 18+
+- Python 3.10+
+- A Supabase project
+- A Groq API Key
+
+### 1. Repository Setup
+Clone the repository:
+```bash
+git clone https://github.com/sammy200-ui/SiliconSage.git
+cd SiliconSage
+```
+
+### 2. Frontend Setup
+Navigate to the frontend directory and install dependencies:
+```bash
+cd frontend
+npm install
+```
+
+Create a `.env.local` file in the `frontend` directory:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
+GROQ_API_KEY=your_groq_api_key
+```
+
+Run the frontend development server:
+```bash
+npm run dev
+```
+The application will be available at `http://localhost:3000`.
+
+### 3. ML Engine Setup
+Open a new terminal and navigate to the `ml_engine` directory:
+```bash
+cd ml_engine
+```
+
+Create a virtual environment and activate it:
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
+Install Python dependencies:
+```bash
+pip install fastapi uvicorn scikit-learn pandas numpy joblib
+```
+
+Run the ML Engine server:
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+The API will be available at `http://localhost:8000`.
+
+## Architecture Notes
+The Frontend and ML Engine are designed to run concurrently. The frontend makes direct API calls to `localhost:8000/predict/fps` to fetch real-time analytics. Ensure both servers are running for the full application experience.
