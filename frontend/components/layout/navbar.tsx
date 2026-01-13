@@ -3,13 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Cpu, Menu, X, Sparkles, BarChart3, MessageSquare } from "lucide-react";
+import { Cpu, Menu, X, Sparkles } from "lucide-react";
 import { useState } from "react";
 
 const navLinks = [
   { href: "/", label: "Home", icon: Sparkles },
   { href: "/builder", label: "PC Builder", icon: Cpu },
-  { href: "/advisor", label: "AI Advisor", icon: MessageSquare },
 ];
 
 export function Navbar() {

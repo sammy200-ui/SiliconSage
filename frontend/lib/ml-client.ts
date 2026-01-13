@@ -53,6 +53,10 @@ export const mlClient = {
                 bottleneck_component: "Unknown",
                 bottleneck_severity: "none",
                 recommendation: "Ensure ML Engine backend is running on port 8000.",
+                integrity_score: 0,
+                integrity_status: "Unknown",
+                integrity_warnings: [],
+                integrity_notes: [],
             };
         }
     },
