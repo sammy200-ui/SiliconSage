@@ -6,15 +6,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Cpu, MonitorSpeaker, CircuitBoard, MemoryStick, HardDrive,
   Zap, Box, Fan, Plus, X, AlertTriangle, CheckCircle, Info,
-  DollarSign, Gauge, Sparkles
+  DollarSign, Gauge, Sparkles, Headphones as HeadphonesIcon, Keyboard as KeyboardIcon, Monitor as MonitorIcon, Wind
 } from "lucide-react";
 import { PartSelector } from "./part-selector";
 import { BuilderAdvisor } from "./builder-advisor";
 import { MLAnalysisPanel } from "./ml-analysis-panel";
 import { BottleneckAnalysis } from "./bottleneck-analysis";
-import type { CPU, GPU, Motherboard, RAM, Storage, PSU, Case, CPUCooler } from "@/lib/types/database";
+import type { CPU, GPU, Motherboard, RAM, Storage, PSU, Case, CPUCooler, CaseFan, Headphones, Keyboard, Monitor } from "@/lib/types/database";
 
-type AnyPart = CPU | GPU | Motherboard | RAM | Storage | PSU | Case | CPUCooler;
+type AnyPart = CPU | GPU | Motherboard | RAM | Storage | PSU | Case | CPUCooler | CaseFan | Headphones | Keyboard | Monitor;
 
 // Part categories with connection info
 const partCategories = [
@@ -26,6 +26,11 @@ const partCategories = [
   { id: "psu", label: "PSU", icon: Zap, required: true, row: 2, col: 1, connectsTo: [] },
   { id: "case", label: "Case", icon: Box, required: false, row: 3, col: 0, connectsTo: [] },
   { id: "cooler", label: "Cooler", icon: Fan, required: false, row: 3, col: 1, connectsTo: [] },
+  // Peripherals (optional)
+  { id: "caseFan", label: "Case Fan", icon: Wind, required: false, row: 4, col: 0, connectsTo: [] },
+  { id: "monitor", label: "Monitor", icon: MonitorIcon, required: false, row: 4, col: 1, connectsTo: [] },
+  { id: "keyboard", label: "Keyboard", icon: KeyboardIcon, required: false, row: 5, col: 0, connectsTo: [] },
+  { id: "headphones", label: "Headphones", icon: HeadphonesIcon, required: false, row: 5, col: 1, connectsTo: [] },
 ] as const;
 
 type PartCategoryId = typeof partCategories[number]["id"];
@@ -39,6 +44,10 @@ export interface BuildState {
   psu: PSU | null;
   case: Case | null;
   cooler: CPUCooler | null;
+  caseFan: CaseFan | null;
+  monitor: Monitor | null;
+  keyboard: Keyboard | null;
+  headphones: Headphones | null;
 }
 
 export function BuilderInterface() {
@@ -46,8 +55,8 @@ export function BuilderInterface() {
   const [build, setBuild] = useState<BuildState>({
     cpu: null, gpu: null, motherboard: null, ram: null,
     storage: [], psu: null, case: null, cooler: null,
+    caseFan: null, monitor: null, keyboard: null, headphones: null,
   });
-
   useEffect(() => {
     const cpuName = searchParams.get("cpu");
     const gpuName = searchParams.get("gpu");
@@ -133,8 +142,7 @@ export function BuilderInterface() {
       {/* Header */}
       <div className="mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold mb-1 flex items-center gap-3">
-            <Sparkles className="w-8 h-8 text-[#ffa828]" />
+          <h1 className="text-3xl font-bold mb-1">
             SiliconSage Builder
           </h1>
           <p className="text-stone-400 text-sm">AI-Powered PC Component Analysis</p>
@@ -203,9 +211,9 @@ export function BuilderInterface() {
                   animate={{
                     opacity: 1,
                     scale: 1,
-                    boxShadow: selected ? "0 0 20px rgba(255, 168, 40, 0.3)" : "none"
+                    boxShadow: selected ? "0 0 8px rgba(255, 168, 40, 0.15)" : "none"
                   }}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3 }}
                   className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer z-10
                     ${selected
@@ -214,15 +222,6 @@ export function BuilderInterface() {
                     }`}
                   onClick={() => setActiveCategory(category.id)}
                 >
-                  {/* Selected indicator pulse */}
-                  {selected && (
-                    <motion.div
-                      className="absolute inset-0 rounded-xl border-2 border-[#ffa828]"
-                      initial={{ opacity: 0.5 }}
-                      animate={{ opacity: [0.5, 0, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  )}
 
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
@@ -292,10 +291,10 @@ export function BuilderInterface() {
           <motion.div
             layout
             className={`mt-4 p-4 rounded-xl border ${compatibilityIssues.length > 0
-                ? "bg-[#ff4b4b]/10 border-[#ff4b4b]/50"
-                : isComplete
-                  ? "bg-[#ffa828]/10 border-[#ffa828]/50"
-                  : "bg-[#171514] border-[#292524]"
+              ? "bg-[#ff4b4b]/10 border-[#ff4b4b]/50"
+              : isComplete
+                ? "bg-[#ffa828]/10 border-[#ffa828]/50"
+                : "bg-[#171514] border-[#292524]"
               }`}
           >
             <div className="flex items-center gap-2">
@@ -321,40 +320,15 @@ export function BuilderInterface() {
             <MLAnalysisPanel build={build} />
           </div>
 
-          {/* AI Advisor - Collapsible */}
-          <div className="bg-[#1c1917] border border-[#292524] rounded-xl overflow-hidden">
-            <button
-              onClick={() => setAdvisorExpanded(!advisorExpanded)}
-              className="w-full p-3 flex items-center justify-between hover:bg-[#292524]/50 transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-[#c678dd] rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-white" />
-                </div>
-                <span className="font-medium text-stone-200">AI Advisor</span>
-              </div>
-              <motion.div
-                animate={{ rotate: advisorExpanded ? 180 : 0 }}
-                className="text-stone-400"
-              >
-                ▼
-              </motion.div>
-            </button>
-            <AnimatePresence>
-              {advisorExpanded && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden"
-                >
-                  <div className="h-[350px] border-t border-[#292524]">
-                    <BuilderAdvisor build={build} />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+          {/* AI Advisor - Always Visible */}
+          <div className="bg-[#1c1917] border-2 border-[#ffa828]/30 rounded-2xl overflow-hidden shadow-lg shadow-[#ffa828]/10">
+            <div className="p-3 bg-gradient-to-r from-[#ffa828]/20 to-transparent border-b border-[#292524] flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#ffa828]" />
+              <span className="font-bold text-[#ffa828]">AI Advisor</span>
+            </div>
+            <div className="h-[320px]">
+              <BuilderAdvisor build={build} />
+            </div>
           </div>
         </div>
       </div>

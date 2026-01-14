@@ -4,7 +4,7 @@
  */
 
 import { getSupabase, isSupabaseConfigured } from "./client";
-import type { CPU, GPU, Motherboard, RAM, Storage, PSU, Case, CPUCooler, PartCategory } from "../types/database";
+import type { CPU, GPU, Motherboard, RAM, Storage, PSU, Case, CPUCooler, CaseFan, Headphones, Keyboard, Monitor, PartCategory } from "../types/database";
 
 // Base part interface for common properties
 interface BasePart {
@@ -24,6 +24,10 @@ const TABLE_MAP: Record<PartCategory, string> = {
   psu: "power_supplies",
   case: "cases",
   cooler: "cpu_coolers",
+  caseFan: "case_fans",
+  monitor: "monitors",
+  keyboard: "keyboards",
+  headphones: "headphones",
 };
 
 // Fallback sample data when Supabase is not configured
@@ -94,6 +98,35 @@ export const SAMPLE_PARTS = {
     { id: "3", name: "NZXT Kraken X63", price: 149, rpm_min: 500, rpm_max: 1800, noise_level_min: 21, noise_level_max: 36, color: "Black", size: 280 },
     { id: "4", name: "Corsair iCUE H150i Elite", price: 189, rpm_min: 400, rpm_max: 2400, noise_level_min: 10, noise_level_max: 37, color: "Black", size: 360 },
   ] as CPUCooler[],
+  // Peripherals
+  caseFan: [
+    { id: "1", name: "Noctua NF-A12x25 PWM", price: 37.95, size: 120, color: "Brown", rpm: [450, 2000], airflow: 60.09, noise_level: 22.6, pwm: true },
+    { id: "2", name: "Arctic P12 PWM PST 5-Pack", price: 40.52, size: 120, color: "Black", rpm: [200, 1800], airflow: 56.3, noise_level: 22.5, pwm: true },
+    { id: "3", name: "Corsair iCUE SP120 RGB Elite", price: 24.99, size: 120, color: "Black", rpm: [400, 1500], airflow: 47.73, noise_level: 28, pwm: true },
+    { id: "4", name: "be quiet! Silent Wings 4", price: 26.90, size: 120, color: "Black", rpm: 1600, airflow: 48.7, noise_level: 18.9, pwm: true },
+    { id: "5", name: "Lian Li Uni Fan SL120", price: 89.99, size: 120, color: "White", rpm: [400, 2000], airflow: 64.05, noise_level: 28.5, pwm: true },
+  ] as CaseFan[],
+  monitor: [
+    { id: "1", name: "LG 27GP850-B", price: 399, screen_size: 27, resolution: [2560, 1440], refresh_rate: 165, response_time: 1, panel_type: "IPS", aspect_ratio: "16:9" },
+    { id: "2", name: "ASUS VG248QG", price: 249, screen_size: 24, resolution: [1920, 1080], refresh_rate: 165, response_time: 0.5, panel_type: "TN", aspect_ratio: "16:9" },
+    { id: "3", name: "Samsung Odyssey G7", price: 699, screen_size: 32, resolution: [2560, 1440], refresh_rate: 240, response_time: 1, panel_type: "VA", aspect_ratio: "16:9" },
+    { id: "4", name: "Dell S2722DGM", price: 269, screen_size: 27, resolution: [2560, 1440], refresh_rate: 165, response_time: 2, panel_type: "VA", aspect_ratio: "16:9" },
+    { id: "5", name: "LG 27GR95QE-B", price: 999, screen_size: 27, resolution: [2560, 1440], refresh_rate: 240, response_time: 0.03, panel_type: "OLED", aspect_ratio: "16:9" },
+  ] as Monitor[],
+  keyboard: [
+    { id: "1", name: "Logitech G Pro X", price: 129, style: "TKL", switch_type: "GX Blue", backlit: "RGB", color: "Black", connection_type: "Wired" },
+    { id: "2", name: "Corsair K70 RGB MK.2", price: 159, style: "Full-size", switch_type: "Cherry MX Red", backlit: "RGB", color: "Black", connection_type: "Wired" },
+    { id: "3", name: "Keychron K8 Pro", price: 109, style: "TKL", switch_type: "Gateron G Pro Brown", backlit: "RGB", color: "Black", connection_type: "Wireless" },
+    { id: "4", name: "Razer Huntsman V2", price: 189, style: "Full-size", switch_type: "Optical Linear", backlit: "RGB", color: "Black", connection_type: "Wired" },
+    { id: "5", name: "SteelSeries Apex Pro", price: 199, style: "Full-size", switch_type: "OmniPoint Adjustable", backlit: "RGB", color: "Black", connection_type: "Wired" },
+  ] as Keyboard[],
+  headphones: [
+    { id: "1", name: "HyperX Cloud II", price: 69.99, type: "Circumaural", frequency_response: [15, 25000], microphone: true, wireless: false, color: "Black / Red" },
+    { id: "2", name: "SteelSeries Arctis 7+", price: 149.99, type: "Circumaural", frequency_response: [20, 20000], microphone: true, wireless: true, color: "Black" },
+    { id: "3", name: "Logitech G Pro X", price: 129.99, type: "Circumaural", frequency_response: [20, 20000], microphone: true, wireless: false, color: "Black" },
+    { id: "4", name: "Audio-Technica ATH-M50x", price: 149, type: "Circumaural", frequency_response: [15, 28000], microphone: false, wireless: false, color: "Black" },
+    { id: "5", name: "Sony WH-1000XM5", price: 399, type: "Circumaural", frequency_response: [4, 40000], microphone: true, wireless: true, color: "Black" },
+  ] as Headphones[],
 };
 
 export type PartsData = typeof SAMPLE_PARTS;

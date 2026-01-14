@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle, XCircle, Cpu, Zap, TrendingUp, Monitor, Gamepad2, Laptop, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { HomeAdvisorWidget } from "@/components/home/home-advisor-widget";
+import { PCBuildAnimation } from "@/components/home/pc-build-animation";
 import { ValueEngineAnimation } from "@/components/home/value-engine-animation";
 import { useState } from "react";
 
@@ -110,7 +110,7 @@ export default function Home() {
           </div>
 
           <div className="flex justify-center lg:justify-end">
-            <HomeAdvisorWidget />
+            <PCBuildAnimation />
           </div>
         </div>
       </section>
@@ -290,7 +290,6 @@ export default function Home() {
             <div className="flex items-center gap-6 text-sm text-stone-500">
               <Link href="/builder" className="hover:text-[#ff4b4b] transition-colors">Builder</Link>
               <Link href="/compare" className="hover:text-[#ff4b4b] transition-colors">Ecosystems</Link>
-              <Link href="/advisor" className="hover:text-[#ff4b4b] transition-colors">Advisor</Link>
             </div>
           </div>
         </div>

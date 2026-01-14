@@ -185,8 +185,8 @@ export interface EcosystemComparison {
 }
 
 // Part Category Union Type
-export type PCPart = CPU | GPU | Motherboard | RAM | Storage | PSU | Case | CPUCooler;
-export type PartCategory = "cpu" | "gpu" | "motherboard" | "ram" | "storage" | "psu" | "case" | "cooler";
+export type PCPart = CPU | GPU | Motherboard | RAM | Storage | PSU | Case | CPUCooler | CaseFan | Headphones | Keyboard | Monitor;
+export type PartCategory = "cpu" | "gpu" | "motherboard" | "ram" | "storage" | "psu" | "case" | "cooler" | "caseFan" | "headphones" | "keyboard" | "monitor";
 
 // Helper type for part list display with unified properties
 export interface PartListItem {
@@ -195,4 +195,58 @@ export interface PartListItem {
   price: number | null;
   specs: string;
   benchmarkScore?: number;
+}
+
+// Case Fan (from case-fan.json)
+export interface CaseFan {
+  id: string;
+  name: string;
+  price: number | null;
+  size: number; // mm
+  color: string | null;
+  rpm: number | [number, number] | null;
+  airflow: number | [number, number] | null;
+  noise_level: number | [number, number] | null;
+  pwm: boolean | null;
+  created_at?: string;
+}
+
+// Headphones (from headphones.json)
+export interface Headphones {
+  id: string;
+  name: string;
+  price: number | null;
+  type: string | null; // Circumaural, In-ear, etc.
+  frequency_response: [number, number] | null;
+  microphone: boolean | null;
+  wireless: boolean | null;
+  color: string | null;
+  created_at?: string;
+}
+
+// Keyboard (from keyboard.json)
+export interface Keyboard {
+  id: string;
+  name: string;
+  price: number | null;
+  style: string | null; // Full-size, TKL, 60%, etc.
+  switch_type: string | null;
+  backlit: string | null;
+  color: string | null;
+  connection_type: string | null; // Wired, Wireless, Bluetooth
+  created_at?: string;
+}
+
+// Monitor (from monitor.json)
+export interface Monitor {
+  id: string;
+  name: string;
+  price: number | null;
+  screen_size: number | null; // inches
+  resolution: [number, number] | null;
+  refresh_rate: number | null; // Hz
+  response_time: number | null; // ms
+  panel_type: string | null; // IPS, VA, TN, OLED
+  aspect_ratio: string | null;
+  created_at?: string;
 }

@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 import { X, Search, Filter, TrendingUp } from "lucide-react";
 import type { BuildState } from "./builder-interface";
 import { fetchParts, SAMPLE_PARTS } from "@/lib/supabase/parts";
-import type { PartCategory, CPU, GPU, Motherboard, RAM, Storage, PSU, Case, CPUCooler } from "@/lib/types/database";
+import type { PartCategory, CPU, GPU, Motherboard, RAM, Storage, PSU, Case, CPUCooler, CaseFan, Headphones, Keyboard, Monitor } from "@/lib/types/database";
 
 // Type for any part
-type AnyPart = CPU | GPU | Motherboard | RAM | Storage | PSU | Case | CPUCooler;
+type AnyPart = CPU | GPU | Motherboard | RAM | Storage | PSU | Case | CPUCooler | CaseFan | Headphones | Keyboard | Monitor;
 
 // Category mapping for the parts service
 const CATEGORY_MAP: Record<string, PartCategory> = {
@@ -20,6 +20,10 @@ const CATEGORY_MAP: Record<string, PartCategory> = {
   psu: "psu",
   case: "case",
   cooler: "cooler",
+  caseFan: "caseFan",
+  monitor: "monitor",
+  keyboard: "keyboard",
+  headphones: "headphones",
 };
 
 interface PartSelectorProps {
@@ -85,6 +89,10 @@ export function PartSelector({ category, onSelect, onClose, currentBuild }: Part
       psu: "Power Supply",
       case: "Case",
       cooler: "CPU Cooler",
+      caseFan: "Case Fan",
+      monitor: "Monitor",
+      keyboard: "Keyboard",
+      headphones: "Headphones",
     };
     return labels[cat] || cat;
   };
@@ -127,6 +135,23 @@ export function PartSelector({ category, onSelect, onClose, currentBuild }: Part
         const cooler = part as CPUCooler;
         const isAIO = cooler.size && cooler.size > 0;
         return isAIO ? `AIO ${cooler.size}mm • ${cooler.color || "?"}` : `Air Cooler • ${cooler.color || "?"}`;
+      }
+      case "caseFan": {
+        const fan = part as CaseFan;
+        return `${fan.size}mm • ${fan.pwm ? "PWM" : "Non-PWM"} • ${fan.color || "?"}`;
+      }
+      case "monitor": {
+        const mon = part as Monitor;
+        const res = mon.resolution ? `${mon.resolution[0]}x${mon.resolution[1]}` : "?";
+        return `${mon.screen_size || "?"}" • ${res} • ${mon.refresh_rate || "?"}Hz • ${mon.panel_type || "?"}`;
+      }
+      case "keyboard": {
+        const kb = part as Keyboard;
+        return `${kb.style || "?"} • ${kb.switch_type || "?"} • ${kb.backlit || "No backlight"}`;
+      }
+      case "headphones": {
+        const hp = part as Headphones;
+        return `${hp.type || "?"} • ${hp.wireless ? "Wireless" : "Wired"} • ${hp.microphone ? "w/ Mic" : "No Mic"}`;
       }
       default:
         return "";
